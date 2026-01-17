@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Info | Playtesta</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Favicon -->
+  <link rel="icon" href="img/favicon-playtesta.svg" type="image/x-icon">
+  <style>
+    body { font-family: 'Silkscreen', sans-serif; }
+    /* Fade-in animation */
+    .fade-in-up { 
+      opacity: 0; 
+      transform: translateY(20px); 
+      transition: opacity 0.5s ease-out, transform 0.5s ease-out; 
+    }
+    .fade-in-up.show { 
+      opacity: 1; 
+      transform: translateY(0); 
+    }
+    /* Ensure each section always at least one viewport tall */
+    section { min-height: 100vh; }
+  </style>
+</head>
+<body class="bg-[#252935] text-white overflow-x-hidden">
+
+  <!-- NAVBAR -->
+  <nav id="navbar" class="fixed top-0 left-0 w-full bg-[#252935] border-b border-white/10 transition-transform duration-300 z-50">
+    <!-- Inner container: centers nav content and adds generous side padding on large screens -->
+    <div class="max-w-[1600px] mx-auto px-6 sm:px-8 lg:px-24">
+      <div class="flex items-center justify-between h-16">
+        <div class="text-xl font-bold">
+          <a href="index.html" class="hover:text-[#8FFF00] transition">Playtesta</a></div>
+
+        <!-- Desktop Menu -->
+        <div class="hidden md:flex gap-6 text-sm">
+          <a href="#" class="hover:text-[#8FFF00] transition">Info</a>
+          <a href="gallery.html" class="hover:text-[#8FFF00] transition">Foto</a>
+          <a href="#footer" class="hover:text-[#8FFF00] transition">Contatti</a>
+        </div>
+
+        <!-- Mobile Hamburger -->
+        <div id="hamburger" class="md:hidden flex flex-col gap-1 cursor-pointer">
+          <span class="w-7 h-[3px] bg-white transition"></span>
+          <span class="w-7 h-[3px] bg-white transition"></span>
+          <span class="w-7 h-[3px] bg-white transition"></span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div id="mobileMenu" class="md:hidden fixed top-0 right-0 w-full h-screen bg-[#252935] transform translate-x-full transition-transform duration-300 z-50">
+    <!-- Close Button sempre visibile -->
+    <button id="mobile-menu-close" class="fixed top-4 right-6 text-white hover:text-[#8FFF00] z-50 focus:outline-none">
+        <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12" />
+        </svg>
+    </button>
+
+    <!-- Menu Links (centrati) -->
+    <div class="flex flex-col justify-center items-center h-full space-y-8 px-8">
+        <a href="#about" class="text-white hover:text-[#8FFF00] text-3xl font-semibold transition-colors">Info</a>
+        <a href="#footer" class="text-white hover:text-[#8FFF00] text-3xl font-semibold transition-colors">Contatti</a>
+    </div>
+  </div>
+
+  <!-- ABOUT EXTENDED -->
+<section id="about" class="flex flex-col">
+
+  <!-- Blocco 1 -->
+  <div class="min-h-screen flex flex-col justify-center items-center text-center px-6 fade-in-up">
+    <h3 class="text-2xl md:text-3xl mb-4 font-bold">Cos’è Playtesta</h3>
+    <p class="text-white/60 text-sm max-w-xl">
+      Playtesta è un evento dedicato ai giochi da tavolo e videogiochi in fase di sviluppo.
+      Un luogo dove le idee prendono forma attraverso il confronto diretto con i giocatori.
+    </p>
+  </div>
+
+  <!-- Blocco 2 -->
+  <div class="min-h-screen flex flex-col justify-center items-center text-center px-6 fade-in-up">
+    <h3 class="text-2xl md:text-3xl mb-4 font-bold">Chi partecipa</h3>
+    <p class="text-white/60 text-sm max-w-xl">
+      Game designer emergenti, sviluppatori, artisti e appassionati.
+      Playtesta è uno spazio aperto dove creativi e pubblico si incontrano sullo stesso piano.
+    </p>
+  </div>
+
+  <!-- Blocco 3 -->
+  <div class="min-h-screen flex flex-col justify-center items-center text-center px-6 fade-in-up">
+    <h3 class="text-2xl md:text-3xl mb-4 font-bold">Perché esserci</h3>
+    <p class="text-white/60 text-sm max-w-xl">
+      Per provare giochi in anteprima, dare feedback reali e vivere
+      il processo creativo dall’interno, prima che i progetti arrivino sul mercato.
+    </p>
+  </div>
+
+</section>
+
+  <!-- FOOTER -->
+  <footer id="footer" class="text-center text-white/60 text-xs py-6 border-t border-white/10 fade-in-up">
+    IG @playtesta_event
+  </footer>
+
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const navbar = document.getElementById('navbar');
+    const mobileMenuClose = document.getElementById('mobile-menu-close');
+
+    // Hamburger animation + menu slide
+    hamburger.addEventListener('click', () => {
+      mobileMenu.classList.toggle('translate-x-full');
+      mobileMenu.classList.toggle('translate-x-0');
+
+      const spans = hamburger.querySelectorAll('span');
+      spans[0].classList.toggle('rotate-45 translate-y-2');
+      spans[1].classList.toggle('opacity-0');
+      spans[2].classList.toggle('-rotate-45 -translate-y-2');
+    });
+
+    // Chiudi menu cliccando la X
+    mobileMenuClose.addEventListener("click", () => {
+        mobileMenu.classList.add("translate-x-full");
+        mobileMenu.classList.remove("translate-x-0");
+    });
+
+    // Chiudi menu cliccando su una voce
+    const mobileMenuLinks = mobileMenu.querySelectorAll("a");
+    mobileMenuLinks.forEach(link => {
+        link.addEventListener("click", () => {
+            mobileMenu.classList.add("translate-x-full");
+            mobileMenu.classList.remove("translate-x-0");
+        });
+    });
+
+    // Hide navbar on scroll down, show on scroll up
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+      const current = window.pageYOffset;
+      if (current > lastScroll) {
+        navbar.style.transform = 'translateY(-100%)';
+      } else {
+        navbar.style.transform = 'translateY(0)';
+      }
+      lastScroll = current;
+    });
+
+    // Fade-in on scroll
+    document.addEventListener("DOMContentLoaded", () => {
+      const elements = document.querySelectorAll(".fade-in-up");
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) entry.target.classList.add("show");
+        });
+      }, { threshold: 0.1 });
+      elements.forEach(el => observer.observe(el));
+    });
+  </script>
+
+</body>
+</html>
