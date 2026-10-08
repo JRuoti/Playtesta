@@ -1,0 +1,69 @@
+PLAYTESTA — come modificare il sito
+
+PAGINE
+  index.html         Home (torneo in evidenza + anteprima)
+  evento.html        "L'evento" — i punti
+  beyblade.html      Beyblade X — stessa hero della home
+  partecipanti.html  Progetti delle scorse edizioni con link Instagram
+  galleria.html  Galleria foto con lightbox
+  contatti.html  Instagram, telefono, email
+
+COSA MODIFICARE (cerca "✏️" nei file)
+  - Ribes Jam: nella pagina L'evento il link Instagram è https://www.instagram.com/ribesjam/ (DA VERIFICARE).
+    Se l'account è diverso, cambialo in evento.html e nella voce "ev.p6" di js/i18n.js.
+  - Email (malko.ruoti@gmail.com): è in contatti.html e nel bottone "Mandaci un'email" di evento.html.
+  - L'evento: blocchi con icona + titolo + testo. Per aggiungerne uno copia un <article> e cambia icona/titolo/testo.
+  - Galleria: metti la foto in /img (jpg o webp) e copia un blocco <figure> (cambia src e alt).
+  - Home (index.html): la hero mostra il prossimo evento (data + luogo) con una sola CTA verso "L'evento".
+    Per cambiarlo aggiorna il titolo nell'HTML e la voce "idx.title" in js/i18n.js.
+  - Torneo Beyblade X (beyblade.html): a ogni nuovo torneo aggiorna titolo + link ISCRIVITI e REGOLAMENTO
+    e la voce "home.title" in js/i18n.js.
+  - Partecipanti: in ordine alfabetico. Per un nuovo progetto copia un <li> nella posizione giusta:
+    con Instagram usa la riga <a class="participant-row">, senza Instagram la riga <div class="participant-row is-static">.
+    Garden groove e Onighiri studio sono ancora senza link: aggiungilo quando hai l'account giusto.
+
+VIDEO DELLA HERO (home + Beyblade X)
+  Apri js/main.js e in alto scrivi il nome del file: const HERO_VIDEO_FILE = 'nomefile.mp4';
+  L'indirizzo pubblico del bucket (https://pub-f2a9...r2.dev/) è già impostato.
+  Verifica: aprendo https://pub-f2a9b1001e4c460ba9d83e1135eccffd.r2.dev/nomefile.mp4 nel browser
+  il video deve partire. NON usare il link ...r2.cloudflarestorage.com/... (è l'accesso privato).
+  Consigliato: mp4 H.264, 1280-1920px di larghezza, 10-20 secondi in loop, senza audio, max 3-5 MB.
+  Finché il link è vuoto (o se il video non parte) si vede la foto img/evento-playtesta-3.jpeg.
+
+PARTECIPANTI — FILTRO
+  Ogni <li> ha data-type="tavolo" oppure data-type="video": il filtro Tutti / Giochi da tavolo / Videogiochi
+  funziona da solo. Numeri e contatori si aggiornano in automatico.
+
+INGLESE
+  L'italiano è scritto nelle pagine HTML, l'inglese in js/i18n.js.
+  Ogni testo traducibile ha data-i18n="chiave": se cambi l'italiano, aggiorna la stessa chiave in i18n.js.
+  La lingua si sceglie con IT / EN nel menu; al primo accesso usa quella del browser.
+  Link diretto in inglese: tuosito/?lang=en
+
+BOTTONI
+  Una sola CTA  -> class="btn btn-primary"
+  Due CTA       -> btn btn-primary + btn btn-secondary
+
+PRESTAZIONI
+  Font, GSAP e CSS sono tutti dentro il sito (niente CDN esterni): il sito è più veloce.
+  css/tailwind.css è già compilato. Se aggiungi classi Tailwind NUOVE che prima non c'erano, rigeneralo con:
+    npx tailwindcss@3 -i css/tailwind.input.css -o css/tailwind.css --minify
+  (cambiare testi, foto o link NON richiede questo passaggio)
+
+ICONE
+  Set "Pixel" di Streamline (gratuito, licenza CC BY 4.0: la citazione nel footer "Icone Streamline" va lasciata).
+  Le icone sono SVG inline con class="pixel-icon": prendono il colore del testo (text-acid, text-white...).
+  Per aggiungerne una: cerca l'icona su https://www.streamlinehq.com/icons/pixel , copia l'SVG e
+  mettilo nell'HTML con class="pixel-icon w-6 h-6" e aria-hidden="true".
+
+BREADCRUMB
+  Nelle pagine interne c'è "Home > Pagina" sopra il titolo (con dati strutturati schema.org per Google).
+  Se crei una nuova pagina copia il blocco <nav class="breadcrumb"> e cambia href e nome della seconda voce.
+
+VALIDAZIONE W3C
+  Tutte le pagine e i CSS passano il validatore ufficiale W3C (Nu Html Checker) con 0 errori e 0 avvisi.
+  Quando modifichi l'HTML: niente src="" vuoti, ogni <img> con alt, e ogni <section> con un titolo (h1-h6).
+  Puoi ricontrollare su https://validator.w3.org/nu/ incollando l'indirizzo della pagina online.
+
+GITHUB PAGES
+  Carica il contenuto di questa cartella nella root del repository e attiva Pages (branch main, cartella /).
