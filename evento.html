@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>L'evento | Playtesta</title>
+  <meta name="description" content="Cos'è Playtesta, chi partecipa e perché esserci.">
+  <meta name="theme-color" content="#252935">
+
+  <!-- Open Graph (anteprima quando condividi il link) -->
+  <meta property="og:title" content="L'evento | Playtesta">
+  <meta property="og:description" content="Cos'è Playtesta, chi partecipa e perché esserci.">
+  <meta property="og:image" content="img/evento-playtesta-3.jpeg">
+  <meta property="og:type" content="website">
+
+  <link rel="icon" href="img/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="img/favicon.png">
+
+  <!-- Font ospitati sul sito + precaricati: arrivano subito, niente attesa da Google -->
+  <link rel="preload" href="fonts/silkscreen-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/silkscreen-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+
+  <!--
+    Stato iniziale:
+    - js-anim     : il testo da animare parte nascosto (solo se JS è attivo)
+    - show-loader : prima visita della sessione -> schermata di caricamento
+    - pt-enter    : arrivo da un'altra pagina del sito -> dissolvenza di entrata
+  -->
+  <script>
+    (function () {
+      var d = document.documentElement;
+      d.classList.add('js-anim');
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      try {
+        if (!sessionStorage.getItem('pt-seen')) d.classList.add('show-loader');
+        else if (sessionStorage.getItem('pt-nav')) d.classList.add('pt-enter');
+        sessionStorage.removeItem('pt-nav');
+      } catch (e) {}
+    })();
+  </script>
+
+  <!-- CSS: Tailwind già compilato (leggero, niente script da 300KB a ogni visita) + stile del sito -->
+  <link rel="stylesheet" href="css/tailwind.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-ink text-white overflow-x-hidden min-h-screen flex flex-col" data-page="evento">
+
+  <!-- LOADER (solo al primo ingresso nel sito) -->
+  <div id="loader" aria-hidden="true">
+    <div class="flex flex-col items-center gap-6 px-6">
+      <p class="loader-logo text-3xl sm:text-5xl font-bold">Playtesta</p>
+      <div class="loader-bar">
+        <span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <p class="text-xs text-white/50"><span id="loader-count">000</span>%</p>
+    </div>
+  </div>
+
+  <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[90] focus:bg-acid focus:text-black focus:px-4 focus:py-2 focus:rounded" data-i18n="skip">Vai al contenuto</a>
+
+  <!-- NAVBAR -->
+  <nav id="navbar" class="fixed top-0 left-0 w-full bg-ink/90 backdrop-blur border-b border-white/10 transition-transform duration-300 z-50">
+    <div class="max-w-[1600px] mx-auto px-6 sm:px-8 lg:px-24">
+      <div class="flex items-center justify-between h-16">
+        <a href="index.html" class="text-xl font-bold hover:text-acid transition">Playtesta</a>
+
+        <!-- Desktop Menu -->
+        <div class="hidden xl:flex items-center gap-8 text-sm">
+          <a href="evento.html" class="nav-link hover:text-acid transition" aria-current="page" data-i18n="nav.evento">L'evento</a>
+          <a href="beyblade.html" class="nav-link hover:text-acid transition" data-i18n="nav.beyblade">Beyblade X</a>
+          <a href="partecipanti.html" class="nav-link hover:text-acid transition" data-i18n="nav.partecipanti">Partecipanti</a>
+          <a href="galleria.html" class="nav-link hover:text-acid transition" data-i18n="nav.galleria">Galleria</a>
+          <a href="contatti.html" class="nav-link hover:text-acid transition" data-i18n="nav.contatti">Contatti</a>
+          <div class="lang-switch flex items-center gap-1 ml-2 pl-6 border-l border-white/15 text-xs" role="group" aria-label="Lingua / Language">
+            <button type="button" data-lang="it">IT</button><span class="text-white/30">/</span><button type="button" data-lang="en">EN</button>
+          </div>
+        </div>
+
+        <!-- Mobile Hamburger -->
+        <button id="hamburger" type="button" class="xl:hidden flex flex-col gap-1 p-2 -mr-2" aria-label="Menu" aria-controls="mobileMenu" aria-expanded="false">
+          <span class="block w-7 h-[3px] bg-white"></span>
+          <span class="block w-7 h-[3px] bg-white"></span>
+          <span class="block w-7 h-[3px] bg-white"></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div id="mobileMenu" role="dialog" aria-modal="true" aria-label="Menu" aria-hidden="true" class="xl:hidden fixed inset-0 bg-ink translate-x-full transition-transform duration-500 ease-[cubic-bezier(.7,0,.2,1)] z-[80] flex flex-col">
+    <!-- Barra in alto: stessa altezza della navbar, X dove c'era l'hamburger -->
+    <div class="flex items-center justify-between h-16 px-6 sm:px-8 border-b border-white/10 shrink-0">
+      <a href="index.html" data-menu-link class="text-xl font-bold hover:text-acid transition">Playtesta</a>
+      <button id="mobile-menu-close" type="button" class="p-2 -mr-2 text-white hover:text-acid transition" aria-label="Chiudi / Close">
+        <svg class="pixel-icon w-7 h-7" viewBox="0 0 8 8" aria-hidden="true"><path fill="currentColor" d="M0 0h1v1h-1zM1 1h1v1h-1zM2 2h1v1h-1zM3 3h1v1h-1zM4 4h1v1h-1zM5 5h1v1h-1zM6 6h1v1h-1zM7 7h1v1h-1zM7 0h1v1h-1zM6 1h1v1h-1zM5 2h1v1h-1zM4 3h1v1h-1zM3 4h1v1h-1zM2 5h1v1h-1zM1 6h1v1h-1zM0 7h1v1h-1z"/></svg>
+      </button>
+    </div>
+
+    <div class="flex-1 flex flex-col justify-center px-8 gap-5 overflow-y-auto py-8">
+        <div class="overflow-hidden">
+          <a href="evento.html" data-menu-link class="flex items-baseline gap-4 text-3xl sm:text-5xl font-bold text-acid transition-colors" aria-current="page">
+            <span data-i18n="nav.evento">L'evento</span>
+          </a>
+        </div>
+        <div class="overflow-hidden">
+          <a href="beyblade.html" data-menu-link class="flex items-baseline gap-4 text-3xl sm:text-5xl font-bold text-white hover:text-acid transition-colors">
+            <span data-i18n="nav.beyblade">Beyblade X</span>
+          </a>
+        </div>
+        <div class="overflow-hidden">
+          <a href="partecipanti.html" data-menu-link class="flex items-baseline gap-4 text-3xl sm:text-5xl font-bold text-white hover:text-acid transition-colors">
+            <span data-i18n="nav.partecipanti">Partecipanti</span>
+          </a>
+        </div>
+        <div class="overflow-hidden">
+          <a href="galleria.html" data-menu-link class="flex items-baseline gap-4 text-3xl sm:text-5xl font-bold text-white hover:text-acid transition-colors">
+            <span data-i18n="nav.galleria">Galleria</span>
+          </a>
+        </div>
+        <div class="overflow-hidden">
+          <a href="contatti.html" data-menu-link class="flex items-baseline gap-4 text-3xl sm:text-5xl font-bold text-white hover:text-acid transition-colors">
+            <span data-i18n="nav.contatti">Contatti</span>
+          </a>
+        </div>
+      <div class="mt-10 flex items-center justify-between text-xs">
+        <a href="https://www.instagram.com/playtesta_event" target="_blank" rel="noopener" class="text-white/50 hover:text-acid transition">IG @playtesta_event ↗</a>
+        <div class="lang-switch flex items-center gap-1 text-sm" role="group" aria-label="Lingua / Language">
+            <button type="button" data-lang="it">IT</button><span class="text-white/30">/</span><button type="button" data-lang="en">EN</button>
+          </div>
+      </div>
+    </div>
+  </div>
+
+  <main id="main" class="flex-1">
+
+    <!-- INTESTAZIONE PAGINA -->
+    <section class="px-6 sm:px-8 lg:px-24 pt-28 md:pt-32 pb-10 md:pb-14 max-w-[1600px] mx-auto">
+      <div class="mb-6" data-reveal><nav class="breadcrumb " aria-label="Breadcrumb">
+        <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a itemprop="item" href="index.html"><span itemprop="name">Home</span></a>
+            <meta itemprop="position" content="1">
+          </li>
+          <li aria-hidden="true"><svg class="pixel-icon w-2 h-3 text-white/40" viewBox="0 0 3 5" aria-hidden="true"><path fill="currentColor" d="M0 0h1v1H0zM1 1h1v1H1zM2 2h1v1H2zM1 3h1v1H1zM0 4h1v1H0z"/></svg></li>
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a itemprop="item" href="evento.html" aria-current="page"><span itemprop="name" data-i18n="nav.evento">L'evento</span></a>
+            <meta itemprop="position" content="2">
+          </li>
+        </ol>
+      </nav></div>
+      <h1 class="text-[clamp(1.75rem,8vw,4.5rem)] font-bold leading-[1.05]" data-split="load" data-i18n="ev.title">L'evento</h1>
+      <p class="text-white/60 text-sm mt-5 max-w-xl leading-relaxed" data-reveal data-delay="0.3" data-i18n="ev.sub">Play, Test, Improve. Tutto quello che c'è da sapere su Playtesta.</p>
+    </section>
+
+    <!-- BLOCCHI — ✏️ per aggiungerne uno copia un <article>, cambia icona/titolo/testo
+         e aggiungi le chiavi ev.p7t / ev.p7 in js/i18n.js per l'inglese -->
+    <section class="px-6 sm:px-8 lg:px-24 max-w-[1600px] mx-auto pb-16">
+      <h2 class="sr-only" data-i18n="ev.h2">Punti dell'evento</h2>
+
+      <!-- BLOCCO: Cos'è Playtesta -->
+      <article class="grid md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] gap-4 md:gap-12 py-12 md:py-20 border-t border-white/10">
+        <div class="flex flex-col gap-3 md:block">
+          <span class="text-acid flex" data-reveal><svg class="pixel-icon w-10 h-10 md:w-14 md:h-14" viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M27.425 18.28h1.53v7.62h-1.53Zm-1.52 7.62h1.52v3.05h-1.52Zm0-10.67h1.52v3.05h-1.52Zm-1.52 13.72h1.52v1.52h-1.52Zm0-15.24h1.52v1.52h-1.52Zm-1.53 4.57h1.53v1.53h-1.53Zm0-6.09h1.53v1.52h-1.53ZM7.615 30.47h16.77V32H7.615Zm12.19-19.81h3.05v1.53h-3.05Zm-1.52 4.57h1.52v1.53h-1.52Zm-3.05 4.58h1.53v1.52h-1.53Zm-3.04-4.58h1.52v1.53h-1.52Zm1.52-13.71h4.57v9.14h1.52V1.52h1.53V0h-10.67v1.52h1.53v9.14h1.52zm-4.57 9.14h3.05v1.53h-3.05Zm0 7.62h1.52v1.53h-1.52Z"/><path fill="currentColor" d="M7.615 27.42h1.53v1.53h13.71v-1.53h1.53V25.9h1.52v-3.05h-1.52v-1.52h-3.05v1.52h-1.53v1.53h-4.57v-1.53h-3.04v-1.52h-4.58v1.52h-1.52v3.05h1.52zm0-15.23h1.53v1.52h-1.53Zm-1.52 16.76h1.52v1.52h-1.52Zm0-15.24h1.52v1.52h-1.52ZM4.575 25.9h1.52v3.05h-1.52Zm0-10.67h1.52v3.05h-1.52Zm-1.53 3.05h1.53v7.62h-1.53Z"/></svg></span>
+          <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold md:mt-4 leading-tight" data-split data-i18n="ev.p1t">Cos'è Playtesta</h2>
+        </div>
+        <div class="md:pt-10">
+          <p class="text-white/60 text-sm md:text-base leading-relaxed max-w-2xl" data-reveal data-i18n="ev.p1">Playtesta è un gaming showcase dedicato a giochi da tavolo, videogiochi e progetti indie. Chi crea porta il proprio gioco al tavolo, chi gioca lo prova.</p>
+        </div>
+      </article>
+
+      <!-- BLOCCO: Per chi è -->
+      <article class="grid md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] gap-4 md:gap-12 py-12 md:py-20 border-t border-white/10">
+        <div class="flex flex-col gap-3 md:block">
+          <span class="text-acid flex" data-reveal><svg class="pixel-icon w-10 h-10 md:w-14 md:h-14" viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M30.48 18.285H32v1.53h-1.52Zm-3.05-1.52h3.05v1.52h-3.05Zm0-3.05h1.52v1.53h-1.52Z"/><path fill="currentColor" d="M22.86 15.245v-3.05h-1.52v-1.53h-1.53v-3.04h1.53v-1.53h6.09v1.53h1.52v6.09h1.53v-9.14h-1.53v-1.53h-1.52v-1.52h-6.09v1.52h-1.53v1.53h-1.52v4.57h-4.57v-4.57h-1.53v-1.53h-1.52v-1.52h-6.1v1.52H3.05v1.53H1.53v9.14h1.52v-6.09h1.52v-1.53h6.1v1.53h1.52v3.04h-1.52v1.53H9.15v3.05H4.57v1.52h4.58v6.09h1.52v-7.61h1.52v-1.53h7.62v1.53h1.53v7.61h1.52v-6.09h4.57v-1.52zm1.52 13.71h1.53v1.52h-1.53Zm-1.52-1.52h1.52v1.52h-1.52Zm-3.05-1.53h3.05v1.53h-3.05Zm0-3.05h1.53v1.53h-1.53Z"/><path fill="currentColor" d="M18.29 16.765h1.52v3.05h-1.52Zm-6.1 7.62h7.62v1.52h-7.62Zm1.53-3.05h4.57v1.52h-4.57Zm-1.53-4.57h1.53v3.05h-1.53Zm-1.52 6.09h1.52v1.53h-1.52Zm-1.52 3.05h3.04v1.53H9.15Zm-1.53 1.53h1.53v1.52H7.62Zm-1.52 1.52h1.52v1.52H6.1Zm-3.05-15.24h1.52v1.53H3.05Zm-1.52 3.05h3.04v1.52H1.53ZM0 18.285h1.53v1.53H0Z"/></svg></span>
+          <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold md:mt-4 leading-tight" data-split data-i18n="ev.p2t">Per chi è</h2>
+        </div>
+        <div class="md:pt-10">
+          <p class="text-white/60 text-sm md:text-base leading-relaxed max-w-2xl" data-reveal data-i18n="ev.p2">Per chi crea giochi e videogiochi. Per chi ama giocarli. E se è la prima volta, nessun problema: siamo pronti a rispiegarvi le regole.</p>
+        </div>
+      </article>
+
+      <!-- BLOCCO: Non solo playtest -->
+      <article class="grid md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] gap-4 md:gap-12 py-12 md:py-20 border-t border-white/10">
+        <div class="flex flex-col gap-3 md:block">
+          <span class="text-acid flex" data-reveal><svg class="pixel-icon w-10 h-10 md:w-14 md:h-14" viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M29.715 5.34h1.52v7.61h-1.52Zm-3.05 0h3.05V3.81h-3.05V2.29h-1.52v15.24h1.52v-3.05h3.05v-1.53h-3.05zm-3.05 12.19h1.53v1.52h-1.53Zm-1.52 1.52h1.52v1.52h-1.52ZM9.905 29.72v-1.53h-1.52v1.53h-1.53v1.52h18.29v-1.52h-1.53v-1.53h-1.52v1.53z"/><path fill="currentColor" d="M19.045 26.67h3.05v1.52h-3.05Zm0-6.1h3.05v1.53h-3.05Zm-1.52-12.19V5.34h-3.05v3.04h-4.57v1.53h1.52v1.52h1.53v1.52h-1.53V16h3.05v-1.52h3.05V16h3.05v-3.05h-1.53v-1.52h1.53V9.91h1.52V8.38zm0 13.72h1.52v4.57h-1.52Zm-4.57 0h1.52v4.57h-1.52Zm-3.05 4.57h3.05v1.52h-3.05Zm0-6.1h3.05v1.53h-3.05Zm-1.52-1.52h1.52v1.52h-1.52ZM6.855.76h18.29v1.53H6.855Zm0 16.77h1.53v1.52h-1.53Zm0-15.24h-1.52v1.52h-3.05v1.53h3.05v7.61h-3.05v1.53h3.05v3.05h1.52zM.765 5.34h1.52v7.61H.765Z"/></svg></span>
+          <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold md:mt-4 leading-tight" data-split data-i18n="ev.p3t">Non solo playtest</h2>
+        </div>
+        <div class="md:pt-10">
+          <p class="text-white/60 text-sm md:text-base leading-relaxed max-w-2xl" data-reveal data-i18n="ev.p3">Troverai anche tornei di <a href="beyblade.html" class="text-link">Beyblade X</a>, tornei di Mario Kart e attività ed eventi pensati per la community.</p>
+        </div>
+      </article>
+
+      <!-- BLOCCO: Quando e dove -->
+      <article class="grid md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] gap-4 md:gap-12 py-12 md:py-20 border-t border-white/10">
+        <div class="flex flex-col gap-3 md:block">
+          <span class="text-acid flex" data-reveal><svg class="pixel-icon w-10 h-10 md:w-14 md:h-14" viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M25.905 7.61h1.52v7.62h-1.52Zm-1.52 7.62h1.52v4.57h-1.52Zm0-10.66h1.52v3.04h-1.52Zm-1.53 15.23h1.53v3.05h-1.53Zm0-16.76h1.53v1.53h-1.53Zm-1.52 19.81h1.52v3.05h-1.52Zm0-10.66h-1.52V9.14h-1.53V7.61h-1.52V6.09h1.52V4.57h-4.57v1.52h-1.52v1.52h-1.53v1.53h-1.52v4.57h1.52v1.52h1.53v1.53h1.52v1.52h4.57v-1.52h1.53v-1.53h1.52v-1.52h1.52V9.14h-1.52zm-1.52 13.71h1.52v1.52h-1.52Z"/><path fill="currentColor" d="M19.815 7.61h1.52v1.53h-1.52Zm0-6.09h3.04v1.52h-3.04Zm-1.53 25.9h1.53v1.53h-1.53Zm0-21.33h1.53v1.52h-1.53Zm-1.52 22.86h1.52v1.52h-1.52Zm-1.53 1.52h1.53V32h-1.53Zm-1.52-1.52h1.52v1.52h-1.52ZM12.195 0h7.62v1.52h-7.62Zm0 27.42h1.52v1.53h-1.52Zm-1.53-1.52h1.53v1.52h-1.53ZM9.145 1.52h3.05v1.52h-3.05Zm0 21.33h1.52v3.05h-1.52Zm-1.53-3.05h1.53v3.05h-1.53Zm0-16.76h1.53v1.53h-1.53Zm-1.52 12.19h1.52v4.57h-1.52Zm0-10.66h1.52v3.04h-1.52Zm-1.52 3.04h1.52v7.62h-1.52Z"/></svg></span>
+          <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold md:mt-4 leading-tight" data-split data-i18n="ev.p4t">Quando e dove</h2>
+        </div>
+        <div class="md:pt-10">
+          <p class="text-white/60 text-sm md:text-base leading-relaxed max-w-2xl" data-reveal data-i18n="ev.p4">Un giovedì al mese al <a href="https://www.nuovoanfiteatromartesana.org/" target="_blank" rel="noopener" class="text-link">NAMA – Nuovo Anfiteatro Martesana</a>.</p>
+        </div>
+      </article>
+
+      <!-- BLOCCO: Quanto costa -->
+      <article class="grid md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] gap-4 md:gap-12 py-12 md:py-20 border-t border-white/10">
+        <div class="flex flex-col gap-3 md:block">
+          <span class="text-acid flex" data-reveal><svg class="pixel-icon w-10 h-10 md:w-14 md:h-14" viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M18.285 6.095h3.05v1.52h1.52v1.53h1.53v3.05h1.52v7.61h-1.52v3.05h-1.53v1.53h-1.52v1.52h-3.05v1.52h-7.62v1.53h10.67v-1.53h3.05v-1.52h1.52v-1.52h1.53v-1.53h1.52v-3.05h1.52v-7.61h-1.52v-3.05h-1.52v-1.53h-1.53v-1.52h-1.52v-1.52h-3.05v-1.53h-10.67v1.53h7.62z"/><path fill="currentColor" d="M22.855 12.195h1.53v7.61h-1.53Zm-1.52 7.61h1.52v1.53h-1.52Zm0-9.14h1.52v1.53h-1.52Zm-1.52 10.67h1.52v1.52h-1.52Zm0-12.19h1.52v1.52h-1.52Zm-1.53 13.71h1.53v1.53h-1.53Zm0-15.24h1.53v1.53h-1.53Zm-7.62 16.77h7.62v1.52h-7.62Zm6.1-7.62h1.52v3.04h-1.52Zm0-4.57h1.52v1.52h-1.52Zm-6.1-6.1h7.62v1.52h-7.62Zm3.05 15.24v1.52h1.52v-1.52h1.53v-1.53h-1.53v-3.04h1.53v-1.53h-1.53v-3.04h1.53v-1.53h-1.53v-1.52h-1.52v1.52h-1.52v1.53h1.52v3.04h-1.52v1.53h1.52v3.04h-1.52v1.53zm-3.05-3.05h1.53v1.52h-1.53Zm0-6.09h1.53v3.04h-1.53Zm-3.04 13.71h3.04v1.52h-3.04Zm1.52-3.05h1.52v1.53h-1.52Zm0-15.24h1.52v1.53h-1.52Zm-1.52-3.04h3.04v1.52h-3.04Zm0 16.76h1.52v1.52h-1.52Zm0-12.19h1.52v1.52h-1.52Zm-1.53 15.24h1.53v1.52h-1.53Zm0-4.58h1.53v1.53h-1.53Zm0-9.14h1.53v1.53h-1.53Z"/><path fill="currentColor" d="M6.095 6.095h1.53v1.52h-1.53Zm-1.52 16.76h1.52v1.53h-1.52Zm0-10.66h1.52v7.61h-1.52Zm0-4.58h1.52v1.53h-1.52Zm-1.53 12.19h1.53v3.05h-1.53Zm0-10.66h1.53v3.05h-1.53Zm-1.52 3.05h1.52v7.61h-1.52Z"/></svg></span>
+          <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold md:mt-4 leading-tight" data-split data-i18n="ev.p5t">Quanto costa</h2>
+        </div>
+        <div class="md:pt-10">
+          <p class="text-white/60 text-sm md:text-base leading-relaxed max-w-2xl" data-reveal data-i18n="ev.p5">Niente: l'evento è gratuito. Per partecipare serve la tessera NAMA, tutte le informazioni sono sul <a href="https://www.nuovoanfiteatromartesana.org/" target="_blank" rel="noopener" class="text-link">sito del NAMA</a>.</p>
+        </div>
+      </article>
+
+      <!-- BLOCCO: Grazie NAMA e Ribes Jam -->
+      <article class="grid md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] gap-4 md:gap-12 py-12 md:py-20 border-t border-white/10">
+        <div class="flex flex-col gap-3 md:block">
+          <span class="text-acid flex" data-reveal><svg class="pixel-icon w-10 h-10 md:w-14 md:h-14" viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M30.47 8.38H32V16h-1.53ZM28.95 16h1.52v3.05h-1.52Zm0-9.14h1.52v1.52h-1.52Zm-1.52 12.19h1.52v1.52h-1.52Zm0-9.15h1.52v3.05h-1.52Zm0-4.57h1.52v1.53h-1.52ZM25.9 8.38h1.53V9.9H25.9Zm-1.52 12.19h3.05v1.52h-3.05ZM22.85 6.86h3.05v1.52h-3.05Zm-1.52 15.23h3.05v1.53h-3.05ZM19.81 3.81h7.62v1.52h-7.62Zm-1.53 19.81h3.05v1.52h-3.05Zm0-18.29h1.53v1.53h-1.53Zm-1.52 19.81h1.52v1.52h-1.52Zm0-18.28h1.52v1.52h-1.52Zm-1.52 19.8h1.52v1.53h-1.52Zm0-18.28h1.52V9.9h-1.52Zm-1.53 16.76h1.53v1.52h-1.53Zm0-18.28h1.53v1.52h-1.53Zm-3.05 16.76h3.05v1.52h-3.05Zm1.53-18.29h1.52v1.53h-1.52ZM7.62 22.09h3.04v1.53H7.62Zm-3.05-1.52h3.05v1.52H4.57Zm0-16.76h7.62v1.52H4.57ZM3.05 19.05h1.52v1.52H3.05Zm0-13.72h1.52v1.53H3.05ZM1.52 16h1.53v3.05H1.52Zm0-9.14h1.53v1.52H1.52ZM0 8.38h1.52V16H0Z"/></svg></span>
+          <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold md:mt-4 leading-tight" data-split data-i18n="ev.p6t">Grazie NAMA e Ribes Jam</h2>
+        </div>
+        <div class="md:pt-10">
+          <p class="text-white/60 text-sm md:text-base leading-relaxed max-w-2xl" data-reveal data-i18n="ev.p6">Playtesta è ospitato dal NAMA, con un grazie speciale a <a href="https://www.instagram.com/ribesjam/" target="_blank" rel="noopener" class="text-link">Ribes Jam</a>. In una sala provi i giochi dei partecipanti, nell'altra ti godi la musica dal vivo.</p><div class="mt-8" data-reveal><a href="https://www.instagram.com/ribesjam/" target="_blank" rel="noopener" class="partner-logo" aria-label="Ribes Jam su Instagram"><img src="img/ribes-jam-logo.png" alt="Logo Ribes Jam" width="400" height="400" loading="lazy" decoding="async"></a></div>
+        </div>
+      </article>
+    </section>
+
+    <!-- PRENOTA — due CTA: primary + secondary -->
+    <section id="prenota" class="px-6 py-24 md:py-32 text-center border-t border-white/10 scroll-mt-16">
+      <h2 class="text-3xl md:text-5xl font-bold mb-8" data-split data-i18n="ev.closeTitle">Prenota il tuo posto</h2>
+      <p class="text-white/60 text-sm md:text-base max-w-xl mx-auto mb-10 leading-relaxed" data-reveal data-i18n="ev.closeText">Scrivici in DM su Instagram o mandaci un'email.<br><br>Tutto esaurito? Passa lo stesso e porta il tuo gioco: appena si libera un posto puoi aggregarti a un altro tavolo.</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <a href="https://ig.me/m/playtesta_event" target="_blank" rel="noopener" class="btn btn-primary" data-reveal><svg class="pixel-icon w-6 h-6" viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M30.47 3.05H32v25.9h-1.53Zm-1.52 25.9h1.52v1.53h-1.52Zm0-27.43h1.52v1.53h-1.52ZM3.04 30.48h25.91V32H3.04ZM27.42 4.57H25.9V3.05H6.09v1.52H4.57v1.52H3.04V25.9h1.53v1.53h1.52v1.52H25.9v-1.52h1.52V25.9h1.53V6.09h-1.53ZM25.9 24.38h-1.52v1.52H7.61v-1.52H6.09V7.62h1.52V6.09h16.77v1.53h1.52Z"/><path fill="currentColor" d="M21.33 7.62h3.05v3.05h-3.05Zm0 4.57h-1.52v-1.52h-7.62v1.52h-1.53v1.52H9.14v7.62h1.52v1.53h1.53v1.52h7.62v-1.52h1.52v-1.53h1.52v-7.62h-1.52Zm-1.52 7.62h-1.53v1.52h-4.57v-1.52h-1.52v-4.57h1.52v-1.53h4.57v1.53h1.53ZM3.04 0h25.91v1.52H3.04ZM1.52 28.95h1.52v1.53H1.52Zm0-27.43h1.52v1.53H1.52ZM0 3.05h1.52v25.9H0Z"/></svg><span data-i18n="ev.cta1">Scrivici su Instagram</span></a>
+        <a href="mailto:malko.ruoti@gmail.com" class="btn btn-secondary" data-reveal><svg class="pixel-icon w-6 h-6" viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M30.47 13.71h-1.52v1.53h1.52v13.71H32V12.19h-1.53zm-1.52-3.04h1.52v1.52h-1.52Z"/><path fill="currentColor" d="M27.43 30.48H4.57v-1.53H1.52v1.53h1.53V32h25.9v-1.52h1.52v-1.53h-3.04zm0-21.34h1.52v1.53h-1.52ZM25.9 27.43h1.53v1.52H25.9ZM3.05 15.24v1.52h3.04v1.53h3.05v1.52h3.05v1.52h7.62v-1.52h3.04v-1.52h3.05v-1.53h3.05v-1.52zM25.9 7.62h1.53v1.52H25.9ZM24.38 25.9h1.52v1.53h-1.52Zm0-19.8h1.52v1.52h-1.52Zm-1.53 18.28h1.53v1.52h-1.53Zm0-19.81h1.53V6.1h-1.53Zm-1.52 18.29h1.52v1.52h-1.52Zm0-19.81h1.52v1.52h-1.52Z"/><path fill="currentColor" d="M19.81 21.33h1.52v1.53h-1.52Zm0-19.81h1.52v1.53h-1.52ZM12.19 0h7.62v1.52h-7.62Zm-1.53 21.33h1.53v1.53h-1.53Zm0-19.81h1.53v1.53h-1.53ZM9.14 22.86h1.52v1.52H9.14Zm0-19.81h1.52v1.52H9.14ZM7.62 24.38h1.52v1.52H7.62Zm0-19.81h1.52V6.1H7.62ZM6.09 25.9h1.53v1.53H6.09Zm0-19.8h1.53v1.52H6.09ZM4.57 27.43h1.52v1.52H4.57Zm0-19.81h1.52v1.52H4.57ZM3.05 9.14h1.52v1.53H3.05Zm-1.53 1.53h1.53v1.52H1.52Zm0 4.57h1.53v-1.53H1.52v-1.52H0v16.76h1.52z"/></svg><span data-i18n="ev.cta2">Mandaci un'email</span></a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer" class="border-t border-white/10">
+    <div class="max-w-[1600px] mx-auto px-6 sm:px-8 lg:px-24 py-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-white/60">
+      <a href="https://www.instagram.com/playtesta_event" target="_blank" rel="noopener" class="inline-flex items-center gap-2 hover:text-acid transition"><svg class="pixel-icon w-6 h-6" viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M30.47 3.05H32v25.9h-1.53Zm-1.52 25.9h1.52v1.53h-1.52Zm0-27.43h1.52v1.53h-1.52ZM3.04 30.48h25.91V32H3.04ZM27.42 4.57H25.9V3.05H6.09v1.52H4.57v1.52H3.04V25.9h1.53v1.53h1.52v1.52H25.9v-1.52h1.52V25.9h1.53V6.09h-1.53ZM25.9 24.38h-1.52v1.52H7.61v-1.52H6.09V7.62h1.52V6.09h16.77v1.53h1.52Z"/><path fill="currentColor" d="M21.33 7.62h3.05v3.05h-3.05Zm0 4.57h-1.52v-1.52h-7.62v1.52h-1.53v1.52H9.14v7.62h1.52v1.53h1.53v1.52h7.62v-1.52h1.52v-1.53h1.52v-7.62h-1.52Zm-1.52 7.62h-1.53v1.52h-4.57v-1.52h-1.52v-4.57h1.52v-1.53h4.57v1.53h1.53ZM3.04 0h25.91v1.52H3.04ZM1.52 28.95h1.52v1.53H1.52Zm0-27.43h1.52v1.53H1.52ZM0 3.05h1.52v25.9H0Z"/></svg>@playtesta_event</a>
+      <div class="flex flex-wrap justify-center gap-x-6 gap-y-2">
+        <a href="evento.html" class="hover:text-acid transition" data-i18n="nav.evento">L'evento</a>
+        <a href="beyblade.html" class="hover:text-acid transition" data-i18n="nav.beyblade">Beyblade X</a>
+        <a href="partecipanti.html" class="hover:text-acid transition" data-i18n="nav.partecipanti">Partecipanti</a>
+        <a href="galleria.html" class="hover:text-acid transition" data-i18n="nav.galleria">Galleria</a>
+        <a href="contatti.html" class="hover:text-acid transition" data-i18n="nav.contatti">Contatti</a>
+      </div>
+      <p>© <span data-year>2026</span> Playtesta · <a href="https://www.streamlinehq.com/icons/pixel" target="_blank" rel="noopener" class="hover:text-acid transition" data-i18n="footer.icons">Icone Streamline</a></p>
+    </div>
+  </footer>
+
+  <!-- Script: tutto ospitato sul sito -->
+  <script src="js/vendor/gsap.min.js"></script>
+  <script src="js/vendor/ScrollTrigger.min.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

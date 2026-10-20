@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Beyblade X | Playtesta</title>
+  <meta name="description" content="Tornei di Beyblade X a Playtesta: iscrizioni e regolamento.">
+  <meta name="theme-color" content="#252935">
+
+  <!-- Open Graph (anteprima quando condividi il link) -->
+  <meta property="og:title" content="Beyblade X | Playtesta">
+  <meta property="og:description" content="Tornei di Beyblade X a Playtesta: iscrizioni e regolamento.">
+  <meta property="og:image" content="img/evento-playtesta-3.jpeg">
+  <meta property="og:type" content="website">
+
+  <link rel="icon" href="img/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="img/favicon.png">
+
+  <!-- Font ospitati sul sito + precaricati: arrivano subito, niente attesa da Google -->
+  <link rel="preload" href="fonts/silkscreen-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/silkscreen-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+
+  <!--
+    Stato iniziale:
+    - js-anim     : il testo da animare parte nascosto (solo se JS è attivo)
+    - show-loader : prima visita della sessione -> schermata di caricamento
+    - pt-enter    : arrivo da un'altra pagina del sito -> dissolvenza di entrata
+  -->
+  <script>
+    (function () {
+      var d = document.documentElement;
+      d.classList.add('js-anim');
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      try {
+        if (!sessionStorage.getItem('pt-seen')) d.classList.add('show-loader');
+        else if (sessionStorage.getItem('pt-nav')) d.classList.add('pt-enter');
+        sessionStorage.removeItem('pt-nav');
+      } catch (e) {}
+    })();
+  </script>
+
+  <!-- CSS: Tailwind già compilato (leggero, niente script da 300KB a ogni visita) + stile del sito -->
+  <link rel="stylesheet" href="css/tailwind.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-ink text-white overflow-x-hidden min-h-screen flex flex-col" data-page="beyblade">
+
+  <!-- LOADER (solo al primo ingresso nel sito) -->
+  <div id="loader" aria-hidden="true">
+    <div class="flex flex-col items-center gap-6 px-6">
+      <p class="loader-logo text-3xl sm:text-5xl font-bold">Playtesta</p>
+      <div class="loader-bar">
+        <span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <p class="text-xs text-white/50"><span id="loader-count">000</span>%</p>
+    </div>
+  </div>
+
+  <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[90] focus:bg-acid focus:text-black focus:px-4 focus:py-2 focus:rounded" data-i18n="skip">Vai al contenuto</a>
+
+  <!-- NAVBAR -->
+  <nav id="navbar" class="fixed top-0 left-0 w-full bg-ink/90 backdrop-blur border-b border-white/10 transition-transform duration-300 z-50">
+    <div class="max-w-[1600px] mx-auto px-6 sm:px-8 lg:px-24">
+      <div class="flex items-center justify-between h-16">
+        <a href="index.html" class="text-xl font-bold hover:text-acid transition">Playtesta</a>
+
+        <!-- Desktop Menu -->
+        <div class="hidden xl:flex items-center gap-8 text-sm">
+          <a href="evento.html" class="nav-link hover:text-acid transition" data-i18n="nav.evento">L'evento</a>
+          <a href="beyblade.html" class="nav-link hover:text-acid transition" aria-current="page" data-i18n="nav.beyblade">Beyblade X</a>
+          <a href="partecipanti.html" class="nav-link hover:text-acid transition" data-i18n="nav.partecipanti">Partecipanti</a>
+          <a href="galleria.html" class="nav-link hover:text-acid transition" data-i18n="nav.galleria">Galleria</a>
+          <a href="contatti.html" class="nav-link hover:text-acid transition" data-i18n="nav.contatti">Contatti</a>
+          <div class="lang-switch flex items-center gap-1 ml-2 pl-6 border-l border-white/15 text-xs" role="group" aria-label="Lingua / Language">
+            <button type="button" data-lang="it">IT</button><span class="text-white/30">/</span><button type="button" data-lang="en">EN</button>
+          </div>
+        </div>
+
+        <!-- Mobile Hamburger -->
+        <button id="hamburger" type="button" class="xl:hidden flex flex-col gap-1 p-2 -mr-2" aria-label="Menu" aria-controls="mobileMenu" aria-expanded="false">
+          <span class="block w-7 h-[3px] bg-white"></span>
+          <span class="block w-7 h-[3px] bg-white"></span>
+          <span class="block w-7 h-[3px] bg-white"></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div id="mobileMenu" role="dialog" aria-modal="true" aria-label="Menu" aria-hidden="true" class="xl:hidden fixed inset-0 bg-ink translate-x-full transition-transform duration-500 ease-[cubic-bezier(.7,0,.2,1)] z-[80] flex flex-col">
+    <!-- Barra in alto: stessa altezza della navbar, X dove c'era l'hamburger -->
+    <div class="flex items-center justify-between h-16 px-6 sm:px-8 border-b border-white/10 shrink-0">
+      <a href="index.html" data-menu-link class="text-xl font-bold hover:text-acid transition">Playtesta</a>
+      <button id="mobile-menu-close" type="button" class="p-2 -mr-2 text-white hover:text-acid transition" aria-label="Chiudi / Close">
+        <svg class="pixel-icon w-7 h-7" viewBox="0 0 8 8" aria-hidden="true"><path fill="currentColor" d="M0 0h1v1h-1zM1 1h1v1h-1zM2 2h1v1h-1zM3 3h1v1h-1zM4 4h1v1h-1zM5 5h1v1h-1zM6 6h1v1h-1zM7 7h1v1h-1zM7 0h1v1h-1zM6 1h1v1h-1zM5 2h1v1h-1zM4 3h1v1h-1zM3 4h1v1h-1zM2 5h1v1h-1zM1 6h1v1h-1zM0 7h1v1h-1z"/></svg>
+      </button>
+    </div>
+
+    <div class="flex-1 flex flex-col justify-center px-8 gap-5 overflow-y-auto py-8">
+        <div class="overflow-hidden">
+          <a href="evento.html" data-menu-link class="flex items-baseline gap-4 text-3xl sm:text-5xl font-bold text-white hover:text-acid transition-colors">
+            <span data-i18n="nav.evento">L'evento</span>
+          </a>
+        </div>
+        <div class="overflow-hidden">
+          <a href="beyblade.html" data-menu-link class="flex items-baseline gap-4 text-3xl sm:text-5xl font-bold text-acid transition-colors" aria-current="page">
+            <span data-i18n="nav.beyblade">Beyblade X</span>
+          </a>
+        </div>
+        <div class="overflow-hidden">
+          <a href="partecipanti.html" data-menu-link class="flex items-baseline gap-4 text-3xl sm:text-5xl font-bold text-white hover:text-acid transition-colors">
+            <span data-i18n="nav.partecipanti">Partecipanti</span>
+          </a>
+        </div>
+        <div class="overflow-hidden">
+          <a href="galleria.html" data-menu-link class="flex items-baseline gap-4 text-3xl sm:text-5xl font-bold text-white hover:text-acid transition-colors">
+            <span data-i18n="nav.galleria">Galleria</span>
+          </a>
+        </div>
+        <div class="overflow-hidden">
+          <a href="contatti.html" data-menu-link class="flex items-baseline gap-4 text-3xl sm:text-5xl font-bold text-white hover:text-acid transition-colors">
+            <span data-i18n="nav.contatti">Contatti</span>
+          </a>
+        </div>
+      <div class="mt-10 flex items-center justify-between text-xs">
+        <a href="https://www.instagram.com/playtesta_event" target="_blank" rel="noopener" class="text-white/50 hover:text-acid transition">IG @playtesta_event ↗</a>
+        <div class="lang-switch flex items-center gap-1 text-sm" role="group" aria-label="Lingua / Language">
+            <button type="button" data-lang="it">IT</button><span class="text-white/30">/</span><button type="button" data-lang="en">EN</button>
+          </div>
+      </div>
+    </div>
+  </div>
+
+  <main id="main" class="flex-1 flex flex-col">
+    <!-- HERO BEYBLADE X
+         ✏️ A ogni nuovo torneo aggiorna: titolo, link ISCRIVITI, link REGOLAMENTO
+            e la traduzione "home.title" in js/i18n.js -->
+    <section class="screen relative isolate overflow-hidden flex flex-col justify-center items-center text-center px-6 pt-16">
+
+      <!-- VIDEO DI SFONDO — il link si imposta UNA volta in js/main.js (HERO_VIDEO_URL).
+           Finché il video non c'è (o non parte) si vede la foto di sfondo. -->
+      <div class="hero-media" aria-hidden="true">
+        <video class="hero-video" muted loop playsinline preload="none"></video>
+        <!-- livello grigio scuro (colore del sito) per il contrasto dei testi -->
+        <div class="hero-overlay"></div>
+      </div>
+      <div class="absolute z-[2] top-20 md:top-24 left-0 right-0 max-w-[1600px] mx-auto px-6 sm:px-8 lg:px-24 text-left" data-reveal><nav class="breadcrumb " aria-label="Breadcrumb">
+        <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a itemprop="item" href="index.html"><span itemprop="name">Home</span></a>
+            <meta itemprop="position" content="1">
+          </li>
+          <li aria-hidden="true"><svg class="pixel-icon w-2 h-3 text-white/40" viewBox="0 0 3 5" aria-hidden="true"><path fill="currentColor" d="M0 0h1v1H0zM1 1h1v1H1zM2 2h1v1H2zM1 3h1v1H1zM0 4h1v1H0z"/></svg></li>
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a itemprop="item" href="beyblade.html" aria-current="page"><span itemprop="name" data-i18n="nav.beyblade">Beyblade X</span></a>
+            <meta itemprop="position" content="2">
+          </li>
+        </ol>
+      </nav></div>
+      <div class="pixel-bg absolute inset-0 pointer-events-none z-[1]" aria-hidden="true"></div>
+
+      <!-- Pausa/riproduci (accessibilità: chi vuole può fermare il movimento) -->
+      <button type="button" class="hero-video-toggle" data-video-toggle hidden aria-pressed="false" aria-label="Metti in pausa il video">
+        <svg class="pixel-icon icon-pause" viewBox="0 0 8 8" aria-hidden="true"><path fill="currentColor" d="M1 1h2v6H1zM5 1h2v6H5z"/></svg><svg class="pixel-icon icon-play" viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M29.71 3.05h1.53v25.9h-1.53Zm-1.52 25.9h1.52v1.52h-1.52Zm0-27.43h1.52v1.53h-1.52ZM3.81 30.47h24.38V32H3.81Zm21.33-6.09h1.52v1.52h-1.52Zm-1.52 1.52h1.52v1.53h-1.52Zm0-3.05h1.52v1.53h-1.52ZM9.9 19.81h1.53v-1.53h15.23v-1.52H11.43v-1.52H9.9v1.52H5.33v1.52H9.9zm13.72-7.62h3.04v1.52h-3.04Zm0-3.05h3.04v1.52h-3.04Zm-1.53 18.29h1.53v1.52h-1.53Zm0-6.1h1.53v1.52h-1.53Zm-4.57-9.14h3.05v1.52h-3.05Zm0-3.05h3.05v1.52h-3.05Zm0-3.05h3.05v1.53h-3.05Zm0 16.76H16v-1.52h-1.53v7.62H16v-1.52h1.52V25.9h1.53v-1.52h-1.53zm-6.09-10.66h3.04v1.52h-3.04Zm0-3.05h3.04v1.52h-3.04Zm0-3.05h3.04v1.53h-3.04Zm0-3.04h3.04v1.52h-3.04ZM8.38 27.43H9.9v1.52H8.38Zm0-6.1H9.9v1.52H8.38ZM6.85 25.9h1.53v1.53H6.85Zm0-3.05h1.53v1.53H6.85ZM5.33 12.19h3.05v1.52H5.33Zm0-3.05h3.05v1.52H5.33Zm0 15.24h1.52v1.52H5.33ZM3.81 0h24.38v1.52H3.81ZM2.28 28.95h1.53v1.52H2.28Zm0-27.43h1.53v1.53H2.28ZM.76 3.05h1.52v25.9H.76Z"/></svg>
+      </button>
+
+      <p class="relative z-[2] text-acid text-xs sm:text-sm mb-6 flex items-center gap-2" data-reveal><svg class="pixel-icon w-6 h-6" viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M30.47 24.38H32v6.1h-1.53Zm0-12.19H32v6.1h-1.53Zm-1.52 10.67h1.52v1.52h-1.52Zm0-4.57h1.52v1.52h-1.52Zm-4.57 12.19V25.9h-1.53v4.58H1.52V32h28.95v-1.52zm3.04-10.67h1.53v3.05h-1.53ZM25.9 3.05h1.52V6.1H25.9ZM24.38 6.1h1.52v3.04h-1.52Zm0-4.58h1.52v1.53h-1.52Zm-1.53 18.29h1.53v3.05h-1.53ZM21.33 0h3.05v1.52h-3.05Zm-3.05 1.52h3.05v1.53h-3.05Zm1.52 15.24H7.61v1.53h6.1v1.52h-1.52v1.52h-1.53v1.53H9.14v1.52H7.61v1.52H19.8v-1.52h1.53v-6.09H19.8zM18.28 6.1h1.52v3.04h-1.52Zm-1.52 0h1.52V3.05h-3.05v1.52h1.53zm-4.57-1.53h3.04V6.1h-3.04ZM9.14 6.1h3.05v1.52H9.14ZM6.09 7.62h3.05v1.52H6.09Zm0 10.67h1.52v6.09H6.09Zm-3.05 1.52h1.53v3.05H3.04Z"/><path fill="currentColor" d="M22.85 12.19v4.57h1.53v-4.57h6.09v-1.52h-3.05V9.14H25.9v1.53h-4.57V9.14H19.8v1.53h-3.04V7.62h-3.05v1.52h-3.05v1.53H6.09V9.14H3.04v1.53H1.52v1.52zM1.52 22.86h1.52v1.52H1.52Zm0-4.57h1.52v1.52H1.52ZM0 24.38h1.52v6.1H0Zm0-12.19h1.52v6.1H0Z"/></svg><span class="blink" data-i18n="home.eyebrow">Prossimo evento</span></p>
+
+      <h1 class="relative z-[2] text-4xl sm:text-5xl md:text-6xl lg:text-7xl max-w-4xl mb-10 font-bold leading-[1.1]" data-split="load" data-i18n="home.title">Torneo di Beyblade X<br>22 ottobre</h1>
+
+      <!-- Due CTA: primary + secondary -->
+      <div class="relative z-[2] w-full flex flex-col items-center gap-4">
+        <a href="https://gearsports.it/tournaments/ea77d619-6228-438c-a6b4-5f53eeae01c7" target="_blank" rel="noopener" class="btn btn-primary" data-reveal data-delay="0.5" data-i18n="home.cta1">ISCRIVITI!</a>
+        <a href="https://gearsports.it/tournaments/ea77d619-6228-438c-a6b4-5f53eeae01c7" target="_blank" rel="noopener" class="btn btn-secondary" data-reveal data-delay="0.6"><svg class="pixel-icon w-7 h-7" viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M28.195 20.575h1.52v6.09h-1.52Zm-1.53 6.09h1.53v1.53h-1.53Zm0-7.61h1.53v1.52h-1.53Zm-1.52-1.53h1.52v1.53h-1.52Zm-4.57 10.67h6.09v1.52h-6.09Zm3.04-12.19h1.53v1.52h-1.53Zm-4.57-1.53h4.57v1.53h-4.57Zm0 12.19h1.53v1.53h-1.53Zm-1.52-1.52h1.52v1.52h-1.52Z"/><path fill="currentColor" d="M14.475 11.435h-3.05v3.04h1.53v1.53h1.52v1.52h1.53v1.53h1.52v1.52h3.05v-3.05h-1.53v-1.52h-1.52v-1.53h-1.52v-1.52h-1.53zm1.53 12.19h1.52v1.52h-1.52Zm0-15.24h1.52v4.57h-1.52Z"/><path fill="currentColor" d="M14.475 19.055h1.53v4.57h-1.53Zm0-12.19h1.53v1.52h-1.53Zm-1.52-1.53h1.52v1.53h-1.52Zm-1.53-1.52h1.53v1.52h-1.53Zm-3.04 12.19h4.57v1.52h-4.57Zm-1.53-1.53h1.53v1.53h-1.53Zm-1.52-12.19h6.09v1.53h-6.09Zm0 10.67h1.52v1.52h-1.52Zm-1.52-1.52h1.52v1.52h-1.52Zm0-7.62h1.52v1.52h-1.52Zm-1.53 1.52h1.53v6.1h-1.53Z"/></svg><span data-i18n="home.cta2">REGOLAMENTO</span></a>
+      </div>
+    </section>
+
+
+    <!-- INFO TORNEO — iscrizione, regolamento e dettagli sono su GearSports -->
+    <section class="px-6 sm:px-8 lg:px-24 max-w-[1600px] mx-auto w-full py-20 md:py-28 border-t border-white/10">
+      <h2 class="text-2xl md:text-4xl font-bold mb-8" data-split data-i18n="bey.infoTitle">Info torneo</h2>
+      <div class="grid md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] gap-10 items-start">
+        <div>
+          <p class="text-white/60 text-sm md:text-base leading-relaxed max-w-2xl mb-6" data-reveal data-i18n="bey.infoText">Iscrizioni, regolamento, formato, premi e orari del torneo sono tutti sulla pagina ufficiale di GearSports, sempre aggiornata.</p>
+          <ul class="bey-info-list" data-reveal>
+            <li data-i18n="bey.i1">Dove: NAMA – Nuovo Anfiteatro Martesana</li>
+            <li data-i18n="bey.i2">Iscrizione e regolamento: su GearSports</li>
+            <li data-i18n="bey.i3">Tessera NAMA richiesta per entrare</li>
+          </ul>
+        </div>
+        <a href="https://gearsports.it/tournaments/ea77d619-6228-438c-a6b4-5f53eeae01c7" target="_blank" rel="noopener" class="btn btn-primary" data-reveal><span data-i18n="bey.infoCta">Vai al torneo</span> ↗</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer" class="border-t border-white/10">
+    <div class="max-w-[1600px] mx-auto px-6 sm:px-8 lg:px-24 py-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-white/60">
+      <a href="https://www.instagram.com/playtesta_event" target="_blank" rel="noopener" class="inline-flex items-center gap-2 hover:text-acid transition"><svg class="pixel-icon w-6 h-6" viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M30.47 3.05H32v25.9h-1.53Zm-1.52 25.9h1.52v1.53h-1.52Zm0-27.43h1.52v1.53h-1.52ZM3.04 30.48h25.91V32H3.04ZM27.42 4.57H25.9V3.05H6.09v1.52H4.57v1.52H3.04V25.9h1.53v1.53h1.52v1.52H25.9v-1.52h1.52V25.9h1.53V6.09h-1.53ZM25.9 24.38h-1.52v1.52H7.61v-1.52H6.09V7.62h1.52V6.09h16.77v1.53h1.52Z"/><path fill="currentColor" d="M21.33 7.62h3.05v3.05h-3.05Zm0 4.57h-1.52v-1.52h-7.62v1.52h-1.53v1.52H9.14v7.62h1.52v1.53h1.53v1.52h7.62v-1.52h1.52v-1.53h1.52v-7.62h-1.52Zm-1.52 7.62h-1.53v1.52h-4.57v-1.52h-1.52v-4.57h1.52v-1.53h4.57v1.53h1.53ZM3.04 0h25.91v1.52H3.04ZM1.52 28.95h1.52v1.53H1.52Zm0-27.43h1.52v1.53H1.52ZM0 3.05h1.52v25.9H0Z"/></svg>@playtesta_event</a>
+      <div class="flex flex-wrap justify-center gap-x-6 gap-y-2">
+        <a href="evento.html" class="hover:text-acid transition" data-i18n="nav.evento">L'evento</a>
+        <a href="beyblade.html" class="hover:text-acid transition" data-i18n="nav.beyblade">Beyblade X</a>
+        <a href="partecipanti.html" class="hover:text-acid transition" data-i18n="nav.partecipanti">Partecipanti</a>
+        <a href="galleria.html" class="hover:text-acid transition" data-i18n="nav.galleria">Galleria</a>
+        <a href="contatti.html" class="hover:text-acid transition" data-i18n="nav.contatti">Contatti</a>
+      </div>
+      <p>© <span data-year>2026</span> Playtesta · <a href="https://www.streamlinehq.com/icons/pixel" target="_blank" rel="noopener" class="hover:text-acid transition" data-i18n="footer.icons">Icone Streamline</a></p>
+    </div>
+  </footer>
+
+  <!-- Script: tutto ospitato sul sito -->
+  <script src="js/vendor/gsap.min.js"></script>
+  <script src="js/vendor/ScrollTrigger.min.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
